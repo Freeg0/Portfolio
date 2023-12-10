@@ -1,19 +1,36 @@
 *
 {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 html,
 body
 {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .webgl
 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.title
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+  font-family: 'Snell Roundhand', serif;
+  background: #000000;
+  background: linear-gradient(to right, white 0%, #000000 50%, white 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  font-size: 7vmin;
+  transform: translateZ(0);
 }

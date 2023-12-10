@@ -84,13 +84,19 @@ window.addEventListener('resize', () => {
   camera.aspect = sizes.width / sizes.height
   camera.updateProjectionMatrix()
 
-  // Update render target sizes
-  targetA.setSize(window.innerWidth, window.innerHeight)
-  targetB.setSize(window.innerWidth, window.innerHeight)
-
   // Update renderer
   renderer.setSize(sizes.width, sizes.height)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+  targetA = new BufferManager(renderer, {
+    width: sizes.width,
+    height: sizes.height,
+  })
+
+  targetB = new BufferManager(renderer, {
+    width: sizes.width,
+    height: sizes.height,
+  })
 })
 
 window.addEventListener('mousedown', () => {
@@ -121,12 +127,12 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-const targetA = new BufferManager(renderer, {
+let targetA = new BufferManager(renderer, {
   width: sizes.width,
   height: sizes.height,
 })
 
-const targetB = new BufferManager(renderer, {
+let targetB = new BufferManager(renderer, {
   width: sizes.width,
   height: sizes.height,
 })
@@ -148,17 +154,22 @@ const materialBufferA = new BufferShader(
     uChannel0: { value: null },
     uFrame: { value: 0 },
   },
-  sizes.width,
-  sizes.height
+  3,
+  3
 )
 
-const materialImage = new BufferShader(waterFragmentShader, {
-  uResolution: {
-    value: uResolution,
+const materialImage = new BufferShader(
+  waterFragmentShader,
+  {
+    uResolution: {
+      value: uResolution,
+    },
+    uChannel0: { value: null },
+    uChannel1: { value: channel1 },
   },
-  uChannel0: { value: null },
-  uChannel1: { value: channel1 },
-})
+  2,
+  2
+)
 
 /**
  * Animate
@@ -172,8 +183,6 @@ const tick = () => {
 
   materialImage.uniforms['uChannel0'].value = targetA.readBuffer.texture
   targetB.render(materialImage.scene, camera, true)
-  console.log(mousePosition)
-  console.log(window.innerHeight)
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick)
